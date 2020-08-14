@@ -1,0 +1,7 @@
+Put SDL and SDL_image runtime binaries here.
+
+SDL 2.0
+https://www.libsdl.org/
+
+SDL_image 2.0
+https://www.libsdl.org/projects/SDL_image/
