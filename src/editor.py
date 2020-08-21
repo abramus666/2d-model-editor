@@ -1,95 +1,101 @@
 
 PROGRAM_NAME = b'2D Model Editor'
 PROGRAM_INFO = '''
-____CONTROLS____
-[F1] Help
-[F2] Info
-[Tab] Change mode
-[~] Toggle command line
+*CONTROLS*
 
-[Ctrl]+[Q] Quit
-[Ctrl]+[N] New
-[Ctrl]+[O] Open
-[Ctrl]+[S] Save
-[Ctrl]+[V] Change view mode
-[Ctrl]+[Z] Undo
-[Ctrl]+[A] Animate
-[Ctrl]+[P] New point
-[Ctrl]+[B] New block
-[Ctrl]+[E] New edge
-[Ctrl]+[C] New circle
-[Ctrl]+[I] Image
-[Ctrl]+[T] Set texture coordinates
-[Ctrl]+[K] Select color
-[Ctrl]+[G] Get color of selected polygon
-[Ctrl]+[D] Duplicate selected polygons
-[Ctrl]+[R] Raise selected polygons
-[Ctrl]+[L] Lower selected polygons
-[Ctrl]+[X] Flip X coordinates
-[Ctrl]+[Y] Flip Y coordinates
-[Ctrl]+[0-9] Select group of vertices
+`[F1]` Help
+`[F2]` Info
+`[Tab]` Change mode
+`[~]` Toggle command line
 
-[Ctrl]+[Shift]+[Z] Redo
-[Ctrl]+[Shift]+[P] New unnamed point
-[Ctrl]+[Shift]+[B] New unnamed block
-[Ctrl]+[Shift]+[E] New unnamed edge
-[Ctrl]+[Shift]+[C] New unnamed circle
-[Ctrl]+[Shift]+[I] Iterate over polygons
-[Ctrl]+[Shift]+[K] Select background color
-[Ctrl]+[Shift]+[0-9] Define group of vertices
+`[Ctrl]+[Q]` Quit
+`[Ctrl]+[N]` New
+`[Ctrl]+[O]` Open
+`[Ctrl]+[S]` Save
+`[Ctrl]+[V]` Change view mode
+`[Ctrl]+[Z]` Undo
+`[Ctrl]+[A]` Animate
+`[Ctrl]+[P]` New point
+`[Ctrl]+[B]` New block
+`[Ctrl]+[E]` New edge
+`[Ctrl]+[C]` New circle
+`[Ctrl]+[I]` Image
+`[Ctrl]+[T]` Set texture coordinates
+`[Ctrl]+[K]` Select color
+`[Ctrl]+[G]` Get color of selected polygon
+`[Ctrl]+[D]` Duplicate selected polygons
+`[Ctrl]+[R]` Raise selected polygons
+`[Ctrl]+[L]` Lower selected polygons
+`[Ctrl]+[X]` Flip X coordinates
+`[Ctrl]+[Y]` Flip Y coordinates
+`[Ctrl]+[0-9]` Select group of vertices
 
-[Insert] New frame
-[Delete] Delete selected vertices
-[Shift]+[Delete] Delete selected polygons
-[Home] [End] Move between animations
-[Page Up] [Page Down] Move between frames
+`[Ctrl]+[Shift]+[Z]` Redo
+`[Ctrl]+[Shift]+[P]` New unnamed point
+`[Ctrl]+[Shift]+[B]` New unnamed block
+`[Ctrl]+[Shift]+[E]` New unnamed edge
+`[Ctrl]+[Shift]+[C]` New unnamed circle
+`[Ctrl]+[Shift]+[I]` Iterate over polygons
+`[Ctrl]+[Shift]+[K]` Select background color
+`[Ctrl]+[Shift]+[0-9]` Define group of vertices
 
-[+] [-] Zoom in/out
+`[Insert]` New frame
+`[Delete]` Delete selected vertices
+`[Shift]+[Delete]` Delete selected polygons
+`[Home] [End]` Move between animations
+`[Page Up] [Page Down]` Move between frames
+
+`[+] [-]` Zoom in/out
 Move mouse wheel to zoom in/out
-Hold [RMB] and move mouse to move the camera
+Hold `[RMB]` and move mouse to move the camera
 
-____INSERT MODE____
-[LMB] Add vertex
-[Esc] Complete polygon creation
+*INSERT MODE*
 
-____EDIT MODE____
-[Esc] Deselect
-Hold [LMB] and move mouse to select vertices
-Hold [Ctrl] and click [LMB] on vertex to select/deselect
-Hold [Shift] and click [LMB] on vertex to select polygon
-Click and hold [LMB] on vertex to move it
-Click and hold [LMB] on selected vertex to move selected vertices
-Hold [R]+[LMB] and move mouse to rotate selected vertices
-Hold [S]+[LMB] and move mouse to scale selected vertices
-Hold [X]+[LMB] and move mouse to scale selected vertices in X axis
-Hold [Y]+[LMB] and move mouse to scale selected vertices in Y axis
+`[LMB]` Add vertex
+`[Esc]` Complete polygon creation
 
-____PLAY MODE____
-[<] [>] Change FPS
+*EDIT MODE*
 
-____COMMAND LINE____
-[Enter] Execute command
-[Backspace] Delete last character
-[Up] [Down] Move beetween command history entries
-[Left] Delete command
-[Right] Complete command
+`[Esc]` Deselect
+Hold `[LMB]` and move mouse to select vertices
+Hold `[Ctrl]` and click `[LMB]` on vertex to select/deselect
+Hold `[Shift]` and click `[LMB]` on vertex to select polygon
+Click and hold `[LMB]` on vertex to move it
+Click and hold `[LMB]` on selected vertex to move selected vertices
+Hold `[R]+[LMB]` and move mouse to rotate selected vertices
+Hold `[S]+[LMB]` and move mouse to scale selected vertices
+Hold `[X]+[LMB]` and move mouse to scale selected vertices in X axis
+Hold `[Y]+[LMB]` and move mouse to scale selected vertices in Y axis
 
-____COMMANDS____
-help, info, quit, new
-open <file_path>
-save <file_path>
-animate (<animation_name>)
-point (<point_name>)
-block (<block_name>)
-edge (<edge_name>)
-circle (<circle_name>)
-image (<file_path>)
-setcolor <red> <green> <blue> (<alpha>)
-setbgcolor <red> <green> <blue>
-setfps <fps>
-newframe, delframe, delanim
-getframe <frame_num> (<animation_name>)
-gotoframe <frame_num> (<animation_name>)
+*PLAY MODE*
+
+`[<] [>]` Change FPS
+
+*COMMAND LINE*
+
+`[Enter]` Execute command
+`[Backspace]` Delete last character
+`[Up] [Down]` Move beetween command history entries
+`[Left]` Delete command
+`[Right]` Complete command
+
+*COMMANDS*
+
+`help, info, quit, new`
+`open <file_path>`
+`save <file_path>`
+`animate (<animation_name>)`
+`point (<point_name>)`
+`block (<block_name>)`
+`edge (<edge_name>)`
+`circle (<circle_name>)`
+`image (<file_path>)    `
+`setcolor <red> <green> <blue> (<alpha>)`
+`setbgcolor <red> <green> <blue>`
+`setfps <fps>`
+`newframe, delframe, delanim`
+`getframe <frame_num> (<animation_name>)`
+`gotoframe <frame_num> (<animation_name>)`
 '''
 
 MODEL_INFO_TEMPLATE = '''
@@ -137,7 +143,7 @@ VMODE_OUTLINE = 0x2
 VMODE_TEXTURE = 0x4
 VMODE_TEX_OUT = (VMODE_TEXTURE | VMODE_OUTLINE)
 
-import copy, math, os, re, sys, time
+import copy, json, math, os, re, sys, time
 
 try:
    import tkinter              as tk
@@ -164,25 +170,47 @@ from src.bindings import *
 def show_message(title, message):
 
    def insert_message():
-      buf = message.strip().split('____')
+      buf = re.split(r'([*`])', message.strip())
       tag = None
       for item in buf:
-         text.insert(tk.END, item, tag)
-         tag = None if tag else 'BIG'
+         if item == '*':
+            tag = None if tag else 'HEADER'
+         elif item == '`':
+            tag = None if tag else 'CODE'
+         else:
+            text.insert(tk.END, item, tag)
 
    def quit(event):
       top.destroy()
 
    top = tk.Toplevel()
    top.title(title)
-   text = tkscrolledtext.ScrolledText(top, font = 'consolas 8', wrap = tk.WORD)
-   text.tag_config('BIG', font = 'consolas 12 bold')
+   text = tkscrolledtext.ScrolledText(top, font = 'Calibri 11', wrap = tk.WORD)
+   text.tag_config('HEADER', font = 'Calibri 14 bold')
+   text.tag_config('CODE',   font = 'Consolas 11')
    text.bind('<Key-Escape>', quit)
    text.pack(expand = True, fill = tk.BOTH)
    text.focus_set()
    insert_message()
    text.config(state = tk.DISABLED)
    top.wait_window()
+
+def stringify_tuples(obj):
+   if isinstance(obj, tuple):
+      return repr(obj)
+   elif isinstance(obj, dict):
+      return {key: stringify_tuples(val) for key, val in obj.items()}
+   elif isinstance(obj, list):
+      return [stringify_tuples(val) for val in obj]
+   else:
+      return obj
+
+def dump_json(obj):
+   obj = stringify_tuples(obj)
+   s = json.dumps(obj, indent = 1, separators = (',', ': '), sort_keys = True)
+   s = s.replace('"(', '[')
+   s = s.replace(')"', ']')
+   return s
 
 def get_typed_char(char, shift, capslock):
    s1 = r"`1234567890-=[]\;',./"
@@ -992,7 +1020,7 @@ class Application:
 
    def execute_command(self, cmd):
       if cmd:
-         self.cmd_line = CMD_PREFIX
+         self.cmd_line = ''
          self.cmd_history.add(cmd)
          cmd = cmd.split()
          fun = 'cmd_' + cmd[0]
@@ -1185,7 +1213,7 @@ class Application:
       if (self.image_formats_supported & IMG_INIT_JPG) != 0: formats += ['.jpg', '.jpeg']
       if (self.image_formats_supported & IMG_INIT_PNG) != 0: formats += ['.png']
       if (self.image_formats_supported & IMG_INIT_TIF) != 0: formats += ['.tif', '.tiff']
-      path = tkfiledialog.askopenfilename(title = 'Open', filetypes = (('All files', '.*'), ('Image files', tuple(sorted(formats)))))
+      path = tkfiledialog.askopenfilename(title = 'Open', filetypes = (('Image files', tuple(sorted(formats))), ('All files', '.*')))
       self.back_from_other_window()
       return path
 
@@ -1230,12 +1258,12 @@ class Application:
             self.cmd_new()
          self.back_from_other_window()
       elif ctrl and char == 'O':
-         path = tkfiledialog.askopenfilename(title = 'Open', defaultextension = '.py', filetypes = (('All files', '.*'), ('Python files', '.py')))
+         path = tkfiledialog.askopenfilename(title = 'Open', defaultextension = '.json', filetypes = (('Json files', '.json'), ('All files', '.*')))
          self.back_from_other_window()
          if path:
             self.cmd_open(path)
       elif ctrl and char == 'S':
-         path = tkfiledialog.asksaveasfilename(title = 'Save', defaultextension = '.py', filetypes = (('All files', '.*'), ('Python files', '.py')))
+         path = tkfiledialog.asksaveasfilename(title = 'Save', defaultextension = '.json', filetypes = (('Json files', '.json'), ('All files', '.*')))
          self.back_from_other_window()
          if path:
             self.cmd_save(path)
@@ -1496,19 +1524,17 @@ class Application:
       if len(args) < 1:
          raise RecoverableError('Syntax: open <file_path>')
       try:
-         env = {}
          with open(args[0], 'r') as f:
-            exec(f.read(), env)
-         self.snapshot_history.reset()
-         self.load_model(env['data'])
+            self.snapshot_history.reset()
+            self.load_model(json.load(f))
       except:
          raise RecoverableError('Read failure')
 
    def cmd_save(self, *args):
       if len(args) < 1:
          raise RecoverableError('Syntax: save <file_path>')
-      data = 'data = ' + repr(self.save_model())
       try:
+         data = dump_json(self.save_model())
          with open(args[0], 'w') as f:
             f.write(data)
       except:
