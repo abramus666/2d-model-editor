@@ -5,97 +5,119 @@ PROGRAM_INFO = '''
 
 `[F1]` Help
 `[F2]` Info
-`[Tab]` Change mode
+`[Tab]` Change mode (insert/edit/play)
 `[~]` Toggle command line
 
 `[Ctrl]+[Q]` Quit
-`[Ctrl]+[N]` New
-`[Ctrl]+[O]` Open
-`[Ctrl]+[S]` Save
-`[Ctrl]+[V]` Change view mode
-`[Ctrl]+[Z]` Undo
-`[Ctrl]+[A]` Animate
-`[Ctrl]+[P]` New point
-`[Ctrl]+[B]` New block
-`[Ctrl]+[E]` New edge
-`[Ctrl]+[C]` New circle
-`[Ctrl]+[I]` Image
-`[Ctrl]+[T]` Set texture coordinates
+`[Ctrl]+[N]` New model
+`[Ctrl]+[O]` Open model
+`[Ctrl]+[S]` Save model
+`[Ctrl]+[I]` Load image
+`[Ctrl]+[V]` Change view mode (colored/outline/textured)
+`[Ctrl]+[T]` Set texture coordinates for selected vertices
+`[Ctrl]+[G]` Get color of the selected vertex
 `[Ctrl]+[K]` Select color
-`[Ctrl]+[G]` Get color of selected polygon
-`[Ctrl]+[D]` Duplicate selected polygons
-`[Ctrl]+[R]` Raise selected polygons
-`[Ctrl]+[L]` Lower selected polygons
-`[Ctrl]+[X]` Flip X coordinates
-`[Ctrl]+[Y]` Flip Y coordinates
-`[Ctrl]+[0-9]` Select group of vertices
+`[Ctrl]+[Z]` Undo
+`[Ctrl]+[0-9]` Select one of defined group of vertices
 
-`[Ctrl]+[Shift]+[Z]` Redo
-`[Ctrl]+[Shift]+[P]` New unnamed point
-`[Ctrl]+[Shift]+[B]` New unnamed block
-`[Ctrl]+[Shift]+[E]` New unnamed edge
-`[Ctrl]+[Shift]+[C]` New unnamed circle
 `[Ctrl]+[Shift]+[I]` Iterate over polygons
 `[Ctrl]+[Shift]+[K]` Select background color
-`[Ctrl]+[Shift]+[0-9]` Define group of vertices
+`[Ctrl]+[Shift]+[Z]` Redo
+`[Ctrl]+[Shift]+[0-9]` Define a group of vertices
 
-`[Insert]` New frame
+`[Ctrl]+[D]` Duplicate selected polygons
+`[Ctrl]+[R]` Raise selected polygons to the top
+`[Ctrl]+[L]` Lower selected polygons to the bottom
+`[Ctrl]+[X]` Flip X coordinates
+`[Ctrl]+[Y]` Flip Y coordinates
+
 `[Delete]` Delete selected vertices
 `[Shift]+[Delete]` Delete selected polygons
-`[Home] [End]` Move between animations
-`[Page Up] [Page Down]` Move between frames
 
-`[+] [-]` Zoom in/out
+`[Insert]` New frame
+`[Home]/[End]` Select previous/next animation
+`[Page Up]/[Page Down]` Select previous/next frame
+
+`[+]/[-]` Zoom in/out
 Move mouse wheel to zoom in/out
 Hold `[RMB]` and move mouse to move the camera
 
 *INSERT MODE*
 
-`[LMB]` Add vertex
+`[LMB]` New vertex
 `[Esc]` Complete polygon creation
 
 *EDIT MODE*
 
 `[Esc]` Deselect
 Hold `[LMB]` and move mouse to select vertices
-Hold `[Ctrl]` and click `[LMB]` on vertex to select/deselect
-Hold `[Shift]` and click `[LMB]` on vertex to select polygon
-Click and hold `[LMB]` on vertex to move it
-Click and hold `[LMB]` on selected vertex to move selected vertices
+Hold `[Ctrl]` and click `[LMB]` on a vertex to select/deselect it
+Hold `[Shift]` and click `[LMB]` on a vertex to select entire polygon
+Click and hold `[LMB]` on a vertex to move it
+Click and hold `[LMB]` on a selected vertex to move all selected vertices
 Hold `[R]+[LMB]` and move mouse to rotate selected vertices
 Hold `[S]+[LMB]` and move mouse to scale selected vertices
-Hold `[X]+[LMB]` and move mouse to scale selected vertices in X axis
-Hold `[Y]+[LMB]` and move mouse to scale selected vertices in Y axis
+Hold `[X]+[LMB]` and move mouse to scale selected vertices in X axis only
+Hold `[Y]+[LMB]` and move mouse to scale selected vertices in Y axis only
 
 *PLAY MODE*
 
-`[<] [>]` Change FPS
+`[<]/[>]` Decrease/increase FPS
 
 *COMMAND LINE*
 
 `[Enter]` Execute command
 `[Backspace]` Delete last character
-`[Up] [Down]` Move beetween command history entries
+`[Up]/[Down]` Previous/next command history entry
 `[Left]` Delete command
 `[Right]` Complete command
 
 *COMMANDS*
 
-`help, info, quit, new`
+`quit`
+Quit the editor.
+
+`new`
+Create a new model.
+
 `open <file_path>`
+Open model.
+
 `save <file_path>`
-`animate (<animation_name>)`
-`point (<point_name>)`
-`block (<block_name>)`
-`edge (<edge_name>)`
-`circle (<circle_name>)`
-`image (<file_path>)    `
+Save model.
+
+`image <file_path>`
+Load image.
+
 `setcolor <red> <green> <blue> (<alpha>)`
+Set color.
+
 `setbgcolor <red> <green> <blue>`
-`setfps <fps>`
-`newframe, delframe, delanim`
-`getframe <frame_num> (<animation_name>)`
-`gotoframe <frame_num> (<animation_name>)`
+Set background color.
+
+`point (<point_name>)`
+`edge (<edge_name>)`
+`rect (<rectangle_name>)`
+`circle (<circle_name>)`
+Create a new point/edge/rectangle/circle of the specified name, or unnamed if no name is specified.
+
+`anim (<animation_name>)`
+Create a new animation of the specified name if it does not exist yet. The created or already existing animation is selected for edit.
+
+`frame (<frame_num> (<animation_name>))`
+Duplicate the specified frame, or the current frame if none is specified. The created frame is inserted after the current frame, and selected for edit.
+
+`delanim (<animation_name>)`
+Delete the specified animation, or the current animation if none is specified.
+
+`delframe (<frame_num> (<animation_name>))`
+Delete the specified frame, or the current frame if none is specified.
+
+`goto <frame_num> (<animation_name>)`
+Select the specified frame for edit.
+
+`copyfrom <frame_num> (<animation_name>)`
+Copy positions of the selected vertices from the specified frame to the current frame.
 '''
 
 MODEL_INFO_TEMPLATE = '''
@@ -106,8 +128,8 @@ Total number of frames: {nframes}
 
 Animations: {animations}
 Points: {points}
-Blocks: {blocks}
 Edges: {edges}
+Rectangles: {rectangles}
 Circles: {circles}
 '''
 
@@ -131,8 +153,8 @@ MODE_INSERT   = 'INSERT mode'
 MODE_EDIT     = 'EDIT mode'
 MODE_PLAY     = 'PLAY mode'
 ENTITY_POINT  = 'point'
-ENTITY_BLOCK  = 'block'
 ENTITY_EDGE   = 'edge'
+ENTITY_RECT   = 'rectangle'
 ENTITY_CIRCLE = 'circle'
 KEY_CTRL      = 'CTRL'
 KEY_SHIFT     = 'SHIFT'
@@ -469,7 +491,6 @@ class Application:
       self.mouse_pos = None
       self.mouse_pos_click = None
       self.frame_time = 0
-      self.play = False
       self.play_fps = INIT_FPS
       self.keys_pressed = set()
       self.font_tex = None
@@ -497,12 +518,12 @@ class Application:
       if self.font_tex is not None:
          self.font_glyph_size = (self.font_tex[1] / 16.0, self.font_tex[2] / 6.0)
       while not self.exit:
-         if self.play:
+         if self.mode == MODE_PLAY:
             self.interpolate_vertices()
          self.render()
          evt = SDL_Event()
          try:
-            if not self.play:
+            if self.mode != MODE_PLAY:
                if SDL_WaitEvent(evt) > 0:
                   self.evt_main(evt)
             while SDL_PollEvent(evt) > 0:
@@ -541,10 +562,10 @@ class Application:
       self.reset_variables()
       self.entities = []
       ent_pairs = (
-         ('points',  ENTITY_POINT),
-         ('blocks',  ENTITY_BLOCK),
-         ('edges',   ENTITY_EDGE),
-         ('circles', ENTITY_CIRCLE))
+         ('points',     ENTITY_POINT),
+         ('edges',      ENTITY_EDGE),
+         ('rectangles', ENTITY_RECT),
+         ('circles',    ENTITY_CIRCLE))
       for key, ent_type in ent_pairs:
          if key in data:
             for name, indices in data[key].items():
@@ -555,6 +576,7 @@ class Application:
       for frames in self.vertices_anim.values():
          for ix in range(len(frames)):
             frames[ix] = [tuple(v) for v in frames[ix]]
+      self.anim_name = sorted(self.vertices_anim.keys())[0]
       self.vertices = self.vertices_anim[self.anim_name][self.cur_frame]
       if ('colors' in data):
          self.colors = [tuple(c) for c in data['colors']]
@@ -567,18 +589,18 @@ class Application:
 
    def save_model(self):
       data = {
-         'points': {},
-         'blocks': {},
-         'edges': {},
-         'circles': {},
-         'polygons': [tuple(poly) for poly in self.polygons if poly],
-         'colors': self.colors,
-         'texcoords': self.texcoords,
-         'vertices': self.vertices_anim}
+         'points':     {},
+         'edges':      {},
+         'rectangles': {},
+         'circles':    {},
+         'polygons':   [tuple(poly) for poly in self.polygons if poly],
+         'colors':     self.colors,
+         'texcoords':  self.texcoords,
+         'vertices':   self.vertices_anim}
       ent_map = {
          ENTITY_POINT:  'points',
-         ENTITY_BLOCK:  'blocks',
          ENTITY_EDGE:   'edges',
+         ENTITY_RECT:   'rectangles',
          ENTITY_CIRCLE: 'circles'}
       for ent in self.entities:
          if ent and (len(ent) > 2):
@@ -934,16 +956,38 @@ class Application:
    def interpolate_vertices(self):
       frames = self.vertices_anim[self.anim_name]
       t = get_time()
-      if self.frame_time > 0:
-         dt = t - self.frame_time
-         self.cur_frame += (dt * self.play_fps)
-         if self.cur_frame > len(frames)-1:
-            self.cur_frame = 0
+      if len(frames) > 1:
+         if self.frame_time > 0:
+            dt = t - self.frame_time
+            self.cur_frame += (dt * self.play_fps)
+            if self.cur_frame > len(frames)-1:
+               self.cur_frame = 0
+         ix1 = int(self.cur_frame)
+         ix2 = (ix1 + 1) % len(frames)
+         delta = self.cur_frame - ix1
+         self.vertices = [(x1+delta*(x2-x1), y1+delta*(y2-y1)) for (x1,y1),(x2,y2) in zip(frames[ix1], frames[ix2])]
       self.frame_time = t
-      ix1 = int(self.cur_frame)
-      ix2 = (ix1 + 1) % len(frames)
-      delta = self.cur_frame - ix1
-      self.vertices = [(x1+delta*(x2-x1), y1+delta*(y2-y1)) for (x1,y1),(x2,y2) in zip(frames[ix1], frames[ix2])]
+
+   def get_info(self):
+
+      def list2string(lst):
+         lst.sort()
+         return ', '.join(lst) if lst else '-'
+
+      def entities_list(ent_type):
+         lst = list(set([ent[1] for ent in self.entities if (ent and ent[1] and ent[0] == ent_type)]))
+         return list2string(lst)
+
+      return MODEL_INFO_TEMPLATE.format(
+         ntriangles = self.num_triangles(),
+         npolygons  = self.num_polygons(),
+         nvertices  = len(self.vertices),
+         nframes    = sum([len(frames) for frames in self.vertices_anim.values()]),
+         animations = list2string(['{} ({})'.format(name, len(frames)) for name, frames in self.vertices_anim.items() if name]),
+         points     = entities_list(ENTITY_POINT),
+         edges      = entities_list(ENTITY_EDGE),
+         rectangles = entities_list(ENTITY_RECT),
+         circles    = entities_list(ENTITY_CIRCLE))
 
    def get_status_line_1(self):
       items = [self.mode]
@@ -988,14 +1032,13 @@ class Application:
 
    def set_mode(self, mode):
       if self.mode != mode:
+         if self.mode == MODE_INSERT:
+            self.reset_entity_or_polygon_creation()
          if self.mode == MODE_PLAY:
             self.cur_frame = int(self.cur_frame)
             self.vertices = self.vertices_anim[self.anim_name][self.cur_frame]
          self.mode = mode
-         self.play = False
-         if mode == MODE_PLAY and len(self.vertices_anim[self.anim_name]) > 1:
-            self.frame_time = 0
-            self.play = True
+         self.frame_time = 0
 
    def next_mode(self):
       change_table = {
@@ -1008,7 +1051,10 @@ class Application:
       if self.img_tex is None:
          change_table = {
             VMODE_COLOR:   VMODE_OUTLINE,
-            VMODE_OUTLINE: VMODE_COLOR}
+            VMODE_OUTLINE: VMODE_COLOR,
+            # These two should not happen if there is no image.
+            VMODE_TEX_OUT: VMODE_COLOR,
+            VMODE_TEXTURE: VMODE_COLOR}
          self.viewmode = change_table[self.viewmode]
       else:
          change_table = {
@@ -1017,6 +1063,20 @@ class Application:
             VMODE_TEX_OUT: VMODE_TEXTURE,
             VMODE_TEXTURE: VMODE_COLOR}
          self.viewmode = change_table[self.viewmode]
+
+   def prev_anim(self, anim_name):
+      anim_names = sorted(self.vertices_anim.keys())
+      for n in reversed(anim_names):
+         if n < anim_name:
+            return n
+      return anim_names[-1]
+
+   def next_anim(self, anim_name):
+      anim_names = sorted(self.vertices_anim.keys())
+      for n in anim_names:
+         if n > anim_name:
+            return n
+      return anim_names[0]
 
    def execute_command(self, cmd):
       if cmd:
@@ -1113,17 +1173,15 @@ class Application:
       for ent in self.entities:
          if ent and len(ent) >= 3:
             x, y = self.vertex_to_screen_coords(ent[2])
-            if ent[0] == ENTITY_POINT:
-               draw_point_circle(ENTITY_COLOR, x, y)
-            elif ent[0] == ENTITY_BLOCK:
-               if len(ent) == 3:
+            if len(ent) == 3: # Point or incomplete edge/rectangle/circle.
+               if ent[0] == ENTITY_RECT:
                   draw_point_square(ENTITY_COLOR, x, y)
                else:
-                  draw_rect(None, ENTITY_COLOR, x, y, *self.vertex_to_screen_coords(ent[3]))
-            elif len(ent) == 3:
-               draw_point_circle(ENTITY_COLOR, x, y)
+                  draw_point_circle(ENTITY_COLOR, x, y)
             elif ent[0] == ENTITY_EDGE:
                draw_line(ENTITY_COLOR, x, y, *self.vertex_to_screen_coords(ent[3]))
+            elif ent[0] == ENTITY_RECT:
+               draw_rect(None, ENTITY_COLOR, x, y, *self.vertex_to_screen_coords(ent[3]))
             elif ent[0] == ENTITY_CIRCLE:
                x_,y_ = self.vertex_to_screen_coords(ent[3])
                radius = math.sqrt((x-x_)**2 + (y-y_)**2)
@@ -1224,28 +1282,26 @@ class Application:
       sym = event.keysym.sym
       char = chr(sym).upper() if (32 <= sym < 128) else None
       if sym == SDLK_F1:
-         self.cmd_help()
+         show_message('Help', PROGRAM_INFO)
       elif sym == SDLK_F2:
-         self.cmd_info()
+         show_message('Info', self.get_info())
       elif sym == SDLK_TAB:
          self.next_mode()
       elif sym == SDLK_INSERT:
-         self.cmd_newframe()
+         self.cmd_frame()
       elif sym == SDLK_DELETE:
          self.restore_point()
          self.delete_selected(shift)
       elif sym == SDLK_HOME:
-         names = [name for name in self.vertices_anim.keys()]
-         names.sort()
-         self.cmd_animate(names[(names.index(self.anim_name)-1) % len(names)])
+         if len(self.vertices_anim) > 1:
+            self.cmd_goto(1, self.prev_anim(self.anim_name))
       elif sym == SDLK_END:
-         names = [name for name in self.vertices_anim.keys()]
-         names.sort()
-         self.cmd_animate(names[(names.index(self.anim_name)+1) % len(names)])
+         if len(self.vertices_anim) > 1:
+            self.cmd_goto(1, self.next_anim(self.anim_name))
       elif sym == SDLK_PAGEUP:
-         self.cmd_gotoframe(((self.cur_frame-1) % len(self.vertices_anim[self.anim_name])) + 1)
+         self.cmd_goto(((self.cur_frame-1) % len(self.vertices_anim[self.anim_name])) + 1)
       elif sym == SDLK_PAGEDOWN:
-         self.cmd_gotoframe(((self.cur_frame+1) % len(self.vertices_anim[self.anim_name])) + 1)
+         self.cmd_goto(((self.cur_frame+1) % len(self.vertices_anim[self.anim_name])) + 1)
       elif sym == SDLK_ESCAPE:
          self.selected = []
          self.reset_entity_or_polygon_creation()
@@ -1267,32 +1323,6 @@ class Application:
          self.back_from_other_window()
          if path:
             self.cmd_save(path)
-      elif ctrl and char == 'V':
-         self.next_viewmode()
-      elif ctrl and char == 'Z':
-         self.undo_or_redo(shift)
-      elif ctrl and char == 'A':
-         self.cmd_line = CMD_PREFIX + 'animate '
-      elif ctrl and char == 'P':
-         if shift:
-            self.cmd_point('')
-         else:
-            self.cmd_line = CMD_PREFIX + 'point '
-      elif ctrl and char == 'B':
-         if shift:
-            self.cmd_block('')
-         else:
-            self.cmd_line = CMD_PREFIX + 'block '
-      elif ctrl and char == 'E':
-         if shift:
-            self.cmd_edge('')
-         else:
-            self.cmd_line = CMD_PREFIX + 'edge '
-      elif ctrl and char == 'C':
-         if shift:
-            self.cmd_circle('')
-         else:
-            self.cmd_line = CMD_PREFIX + 'circle '
       elif ctrl and char == 'I':
          if shift:
             self.iterate_over_polygons()
@@ -1300,8 +1330,12 @@ class Application:
             path = self.evt_get_image_path()
             if path:
                self.cmd_image(path)
+      elif ctrl and char == 'V':
+         self.next_viewmode()
       elif ctrl and char == 'T':
          self.set_texcoords()
+      elif ctrl and char == 'G':
+         self.gather_color()
       elif ctrl and char == 'K':
          initcolor = tuple([int(color_component * 255.0) for color_component in self.cur_color[:3]])
          triple, color = tkcolorchooser.askcolor(initcolor, title = 'Select color')
@@ -1312,8 +1346,8 @@ class Application:
                self.cmd_setbgcolor(*triple)
             else:
                self.cmd_setcolor(*triple)
-      elif ctrl and char == 'G':
-         self.gather_color()
+      elif ctrl and char == 'Z':
+         self.undo_or_redo(shift)
       elif ctrl and char == 'D':
          self.restore_point()
          self.duplicate_polygons()
@@ -1339,9 +1373,9 @@ class Application:
          elif char in ('=','+'):
             self.zoom(True)
          elif char in (',','<'):
-            self.cmd_setfps(self.play_fps * (1.0 / 1.25))
+            self.play_fps *= (1.0 / 1.25)
          elif char in ('.','>'):
-            self.cmd_setfps(self.play_fps * 1.25)
+            self.play_fps *= 1.25
          elif char is not None and char.isalpha():
             self.keys_pressed.add(char)
       else:
@@ -1388,7 +1422,7 @@ class Application:
             ent.append(vertex_ix)
             self.entities.append(None)
             self.new_entity(ent[0], ent[1])
-         elif ent and ent[0] in (ENTITY_BLOCK, ENTITY_EDGE, ENTITY_CIRCLE) and len(ent) < 4:
+         elif ent and ent[0] in (ENTITY_EDGE, ENTITY_RECT, ENTITY_CIRCLE) and len(ent) < 4:
             ent.append(vertex_ix)
             if len(ent) == 4:
                self.entities.append(None)
@@ -1488,30 +1522,6 @@ class Application:
    # Command handlers.
    #============================================================================
 
-   def cmd_help(self, *args):
-      show_message('Help', PROGRAM_INFO)
-
-   def cmd_info(self, *args):
-
-      def list2string(lst):
-         lst.sort()
-         return ', '.join(lst) if lst else '-'
-
-      def entities_list(ent_type):
-         lst = list(set([ent[1] for ent in self.entities if (ent and ent[1] and ent[0] == ent_type)]))
-         return list2string(lst)
-
-      show_message('Info', MODEL_INFO_TEMPLATE.format(
-         ntriangles = self.num_triangles(),
-         npolygons = self.num_polygons(),
-         nvertices = len(self.vertices),
-         nframes = sum([len(frames) for frames in self.vertices_anim.values()]),
-         animations = list2string(['{} ({})'.format(name, len(frames)) for name, frames in self.vertices_anim.items() if name]),
-         points  = entities_list(ENTITY_POINT),
-         blocks  = entities_list(ENTITY_BLOCK),
-         edges   = entities_list(ENTITY_EDGE),
-         circles = entities_list(ENTITY_CIRCLE)))
-
    def cmd_quit(self, *args):
       self.exit = True
 
@@ -1540,44 +1550,20 @@ class Application:
       except:
          raise RecoverableError('Write failure')
 
-   def cmd_animate(self, *args):
-      anim_name = args[0] if (len(args) >= 1) else ''
-      if anim_name != self.anim_name:
-         if anim_name not in self.vertices_anim:
-            self.restore_point()
-         self.anim_name = anim_name
-         self.cur_frame = 0
-         if self.anim_name not in self.vertices_anim:
-            self.vertices = self.vertices[:]
-            self.vertices_anim[self.anim_name] = [self.vertices]
-         else:
-            self.vertices = self.vertices_anim[self.anim_name][self.cur_frame]
-         self.set_mode(MODE_EDIT)
-
-   def cmd_point(self, *args):
-      self.new_entity(ENTITY_POINT, (args[0] if (len(args) > 0) else ''))
-
-   def cmd_block(self, *args):
-      self.new_entity(ENTITY_BLOCK, (args[0] if (len(args) > 0) else ''))
-
-   def cmd_edge(self, *args):
-      self.new_entity(ENTITY_EDGE, (args[0] if (len(args) > 0) else ''))
-
-   def cmd_circle(self, *args):
-      self.new_entity(ENTITY_CIRCLE, (args[0] if (len(args) > 0) else ''))
-
    def cmd_image(self, *args):
       free_texture(self.img_tex)
       self.img_tex = None
       self.img_coords = None
-      if self.viewmode != VMODE_COLOR and self.viewmode != VMODE_OUTLINE:
-         self.viewmode = VMODE_COLOR
       if len(args) >= 1:
          try:
             self.img_tex = load_texture(args[0])
             self.calculate_image_coords()
          except:
             raise RecoverableError('Read failure')
+      if self.img_tex is None:
+         # Not every view mode is valid if there is no image.
+         if self.viewmode != VMODE_COLOR and self.viewmode != VMODE_OUTLINE:
+            self.viewmode = VMODE_COLOR
 
    def cmd_setcolor(self, *args):
       if len(args) < 3:
@@ -1602,49 +1588,100 @@ class Application:
       b = min(max(float(args[2]), 0.0), 1.0)
       self.bg_color = (r, g, b, 1.0)
 
-   def cmd_setfps(self, *args):
-      if len(args) < 1:
-         raise RecoverableError('Syntax: setfps <fps>')
-      try:
-         self.play_fps = float(args[0])
-      except:
-         raise RecoverableError('Non-numeric value')
+   def cmd_point(self, *args):
+      self.reset_entity_or_polygon_creation()
+      self.new_entity(ENTITY_POINT, (args[0] if (len(args) > 0) else ''))
 
-   def cmd_newframe(self, *args):
+   def cmd_edge(self, *args):
+      self.reset_entity_or_polygon_creation()
+      self.new_entity(ENTITY_EDGE, (args[0] if (len(args) > 0) else ''))
+
+   def cmd_rect(self, *args):
+      self.reset_entity_or_polygon_creation()
+      self.new_entity(ENTITY_RECT, (args[0] if (len(args) > 0) else ''))
+
+   def cmd_circle(self, *args):
+      self.reset_entity_or_polygon_creation()
+      self.new_entity(ENTITY_CIRCLE, (args[0] if (len(args) > 0) else ''))
+
+   def cmd_anim(self, *args):
+      self.set_mode(MODE_EDIT)
+      anim_name = args[0] if (len(args) >= 1) else ''
+      if anim_name != self.anim_name:
+         if anim_name not in self.vertices_anim:
+            self.restore_point()
+         self.anim_name = anim_name
+         self.cur_frame = 0
+         if self.anim_name not in self.vertices_anim:
+            self.vertices = self.vertices[:]
+            self.vertices_anim[self.anim_name] = [self.vertices]
+         else:
+            self.vertices = self.vertices_anim[self.anim_name][self.cur_frame]
+
+   def cmd_delanim(self, *args):
+      anim_name = args[0] if (len(args) >= 1) else self.anim_name
+      if anim_name not in self.vertices_anim:
+         raise RecoverableError('No animation')
+      if len(self.vertices_anim) == 1:
+         raise RecoverableError('Invalid operation')
+      self.restore_point()
+      del self.vertices_anim[anim_name]
+      if self.anim_name == anim_name:
+         self.cmd_goto(1, self.next_anim(anim_name))
+
+   def cmd_frame(self, *args):
       if self.mode == MODE_PLAY:
          raise RecoverableError('Invalid mode')
+      frame_ix  = int(args[0])-1 if (len(args) >= 1) else self.cur_frame
+      anim_name =     args[1]    if (len(args) >= 2) else self.anim_name
+      if anim_name not in self.vertices_anim:
+         raise RecoverableError('No animation')
+      if (frame_ix < 0) or (frame_ix >= len(self.vertices_anim[anim_name])):
+         raise RecoverableError('No frame')
       self.restore_point()
-      self.vertices = self.vertices[:]
-      ix = self.cur_frame+1
-      tmp = self.vertices_anim[self.anim_name]
-      self.vertices_anim[self.anim_name] = tmp[:ix] + [self.vertices] + tmp[ix:]
-      self.cur_frame = ix
+      self.vertices = self.vertices_anim[anim_name][frame_ix][:]
+      self.cur_frame += 1
+      allframes = self.vertices_anim[self.anim_name]
+      self.vertices_anim[self.anim_name] = allframes[:self.cur_frame] + [self.vertices] + allframes[self.cur_frame:]
 
    def cmd_delframe(self, *args):
       if self.mode == MODE_PLAY:
          raise RecoverableError('Invalid mode')
-      if len(self.vertices_anim[self.anim_name]) < 2:
-         raise RecoverableError('Invalid operation')
-      self.restore_point()
-      del self.vertices_anim[self.anim_name][self.cur_frame]
-      if self.cur_frame > len(self.vertices_anim[self.anim_name])-1:
-         self.cur_frame = len(self.vertices_anim[self.anim_name])-1
-      self.vertices = self.vertices_anim[self.anim_name][self.cur_frame]
+      frame_ix  = int(args[0])-1 if (len(args) >= 1) else self.cur_frame
+      anim_name =     args[1]    if (len(args) >= 2) else self.anim_name
+      if anim_name not in self.vertices_anim:
+         raise RecoverableError('No animation')
+      if (frame_ix < 0) or (frame_ix >= len(self.vertices_anim[anim_name])):
+         raise RecoverableError('No frame')
+      if len(self.vertices_anim[anim_name]) == 1:
+         self.cmd_delanim(anim_name)
+      else:
+         self.restore_point()
+         del self.vertices_anim[anim_name][frame_ix]
+         if self.anim_name == anim_name:
+            self.cur_frame = min(self.cur_frame, len(self.vertices_anim[self.anim_name])-1)
+            self.vertices = self.vertices_anim[self.anim_name][self.cur_frame]
 
-   def cmd_delanim(self, *args):
-      if self.mode == MODE_PLAY:
-         raise RecoverableError('Invalid mode')
-      if not self.anim_name:
-         raise RecoverableError('Invalid operation')
-      self.restore_point()
-      del self.vertices_anim[self.anim_name]
-      self.cmd_animate('')
+   def cmd_goto(self, *args):
+      if len(args) < 1:
+         raise RecoverableError('Syntax: goto <frame_num> (<animation_name>)')
+      frame_ix = int(args[0])-1
+      anim_name = args[1] if len(args) > 1 else self.anim_name
+      if anim_name not in self.vertices_anim:
+         raise RecoverableError('No animation')
+      if frame_ix >= len(self.vertices_anim[anim_name]):
+         raise RecoverableError('No frame')
+      # Makes no sense to change frame in play mode, unless when jumping to another animation.
+      if (self.mode != MODE_PLAY) or (self.anim_name != anim_name):
+         self.anim_name = anim_name
+         self.cur_frame = frame_ix
+         self.vertices = self.vertices_anim[self.anim_name][self.cur_frame]
 
-   def cmd_getframe(self, *args):
+   def cmd_copyfrom(self, *args):
       if self.mode == MODE_PLAY:
          raise RecoverableError('Invalid mode')
       if len(args) < 1:
-         raise RecoverableError('Syntax: getframe <frame_num> (<animation_name>)')
+         raise RecoverableError('Syntax: copyfrom <frame_num> (<animation_name>)')
       frame_ix = int(args[0])-1
       anim_name = args[1] if len(args) > 1 else self.anim_name
       if anim_name not in self.vertices_anim:
@@ -1655,18 +1692,3 @@ class Application:
       for vix in self.selected:
          x, y = self.vertices_anim[anim_name][frame_ix][vix]
          self.vertices[vix] = (x, y)
-
-   def cmd_gotoframe(self, *args):
-      if self.mode == MODE_PLAY:
-         raise RecoverableError('Invalid mode')
-      if len(args) < 1:
-         raise RecoverableError('Syntax: gotoframe <frame_num> (<animation_name>)')
-      frame_ix = int(args[0])-1
-      anim_name = args[1] if len(args) > 1 else self.anim_name
-      if anim_name not in self.vertices_anim:
-         raise RecoverableError('No animation')
-      if frame_ix >= len(self.vertices_anim[anim_name]):
-         raise RecoverableError('No frame')
-      self.anim_name = anim_name
-      self.cur_frame = frame_ix
-      self.vertices = self.vertices_anim[self.anim_name][self.cur_frame]
