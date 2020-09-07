@@ -169,12 +169,6 @@ VMODE_OUTLINE = 0x2
 VMODE_TEXTURE = 0x4
 VMODE_TEX_OUT = (VMODE_TEXTURE | VMODE_OUTLINE)
 
-ENTITY_CONTAINERS = {
-   ENTITY_POINT:  'points',
-   ENTITY_EDGE:   'edges',
-   ENTITY_RECT:   'rectangles',
-   ENTITY_CIRCLE: 'circles'}
-
 import copy, json, math, os, re, sys, time, traceback
 
 try:
@@ -495,8 +489,7 @@ class Application:
       self.mode = MODE_INSERT
       self.viewmode = VMODE_COLOR
       self.window_size = INIT_WINDOW_SIZE
-      self.origin = (self.window_size[0]/2, self.window_size[1]/2)
-      self.scale = (min(self.window_size) * 0.5, -min(self.window_size) * 0.5) # Flip Y axis.
+      self.reset_view()
       self.cur_color = INIT_COLOR
       self.bg_color = INIT_BG_COLOR
       self.mouse_pos = None
@@ -572,85 +565,111 @@ class Application:
       self.vertices_anim = {self.anim_name: [[]]}
       self.vertices = self.vertices_anim[self.anim_name][self.cur_frame]
 
+   def setup_view(self, x, y, width, height):
+      scale = min(self.window_size[0] / width, self.window_size[1] / height)
+      self.scale = (scale, -scale) # Flip Y axis.
+      org_x = (self.window_size[0] / 2.0) - (x * self.scale[0])
+      org_y = (self.window_size[1] / 2.0) - (y * self.scale[1])
+      self.origin = (org_x, org_y)
+
+   def reset_view(self):
+      if len(self.vertices) > 0:
+         left   = min(self.vertices, key = lambda v: v[0])[0]
+         top    = max(self.vertices, key = lambda v: v[1])[1]
+         right  = max(self.vertices, key = lambda v: v[0])[0]
+         bottom = min(self.vertices, key = lambda v: v[1])[1]
+         self.setup_view((left+right)/2, (top+bottom)/2, right-left, top-bottom)
+      else:
+         self.setup_view(0.0, 0.0, 2.0, 2.0)
+
    def load_model(self, data):
+
+      def get_entity(ent):
+         try:
+            return [ent['kind'], ent['name']] + list(ent['value'])
+         except TypeError:
+            return [ent['kind'], ent['name'], ent['value']]
+
       self.reset_variables()
-      self.entities = []
-      for ent_type, key in ENTITY_CONTAINERS.items():
-         if key in data:
-            for name, indices in data[key].items():
-               self.entities += [([ent_type, name, ix] if (ent_type == ENTITY_POINT) else [ent_type, name] + list(ix)) for ix in indices]
-      self.entities.append(None)
-      self.polygons = [list(poly) for poly in data['polygons']] + [None]
-      self.vertices_anim = data['vertices']
-      for frames in self.vertices_anim.values():
-         for ix in range(len(frames)):
-            frames[ix] = [tuple(v) for v in frames[ix]]
-      self.anim_name = sorted(self.vertices_anim.keys())[0]
-      self.vertices = self.vertices_anim[self.anim_name][self.cur_frame]
-      if ('colors' in data):
+      if 'polygons' in data:
+         if isinstance(data['polygons'], dict):
+            self.polygons = get_polygons_from_btree(data['polygons']) + self.polygons
+         elif isinstance(data['polygons'], list):
+            self.polygons = [list(poly) for poly in data['polygons']] + self.polygons
+      if 'entities' in data:
+         if isinstance(data['entities'], dict):
+            self.entities = get_entities_from_btree(data['entities']) + self.entities
+         elif isinstance(data['entities'], list):
+            self.entities = [get_entity(ent) for ent in data['entities']] + self.entities
+      if '!entities' in data:
+         self.entities = [get_entity(ent) for ent in data['!entities']] + self.entities
+      if 'vertices' in data:
+         if isinstance(data['vertices'], dict):
+            self.vertices_anim = data['vertices']
+            for frames in self.vertices_anim.values():
+               for ix in range(len(frames)):
+                  frames[ix] = [tuple(v) for v in frames[ix]]
+            self.anim_name = sorted(self.vertices_anim.keys())[0]
+            self.vertices = self.vertices_anim[self.anim_name][self.cur_frame]
+         elif isinstance(data['vertices'], list):
+            self.vertices += [tuple(v) for v in data['vertices']]
+      if 'colors' in data:
          self.colors = [tuple(c) for c in data['colors']]
       else:
          self.colors = [INIT_COLOR for v in self.vertices]
-      if ('texcoords' in data):
+      if 'texcoords' in data:
          self.texcoords = [tuple(t) for t in data['texcoords']]
       else:
          self.texcoords = [(0,0) for v in self.vertices]
 
-   def save_data_init(self, data):
-      for dct_name in ENTITY_CONTAINERS.values():
-         data[dct_name] = {}
+   def get_complete_polygons(self):
+      return [poly for poly in self.polygons if (poly and len(poly)>=3)]
+ 
+   def get_complete_entities(self):
+      return [ent for ent in self.entities if (ent and len(ent)>=3 and (ent[0]==ENTITY_POINT or len(ent)>=4))]
 
-   def save_data_cleanup(self, data):
-      for dct_name in ENTITY_CONTAINERS.values():
-         if len(data[dct_name]) == 0:
-            del data[dct_name]
+   def save_entities(self, entities):
+      return [{
+         'kind': ent[0],
+         'name': ent[1],
+         'value': tuple(ent[2:]) if (len(ent) > 3) else ent[2]
+         } for ent in entities]
+
+   def save_cleanup(self, data):
+      if data['polygons'] is None or len(data['polygons']) == 0:
+         del data['polygons']
+      if data['entities'] is None or len(data['entities']) == 0:
+         del data['entities']
+      if '!entities' in data and len(data['!entities']) == 0:
+         del data['!entities']
       if data['colors'].count(INIT_COLOR) == len(data['colors']):
          del data['colors']
       if data['texcoords'].count((0,0)) == len(data['texcoords']):
          del data['texcoords']
+      if len(data['vertices']) == 0:
+         del data['vertices']
+      return data
 
    def save_model(self):
-      data = {
-         'polygons':   [tuple(poly) for poly in self.polygons if poly],
-         'colors':     self.colors,
-         'texcoords':  self.texcoords,
-         'vertices':   self.vertices_anim}
-      self.save_data_init(data)
-      for ent in self.entities:
-         if ent and (len(ent) > 2):
-            dct = data[ENTITY_CONTAINERS[ent[0]]]
-            lst = dct[ent[1]] if ent[1] in dct else []
-            val = tuple(ent[2:]) if (len(ent) > 3) else ent[2]
-            lst.append(val)
-            dct[ent[1]] = lst
-      self.save_data_cleanup(data)
-      return data
+      return self.save_cleanup({
+         'polygons':  [tuple(poly) for poly in self.get_complete_polygons()],
+         'entities':  self.save_entities(self.get_complete_entities()),
+         'colors':    self.colors,
+         'texcoords': self.texcoords,
+         'vertices':  self.vertices_anim})
 
    def export_btree(self):
-      data = BTreeBuilder().build(self.polygons, self.colors, self.texcoords, self.vertices)
-
-      # Vertex array no longer contains vertices that are only used by entities
-      # (i.e. they are not used by any polygon). We need to add them back.
-      def find_vertex(index):
-         if self.vertices[index] in data['vertices']:
-            return data['vertices'].index(v)
-         else:
-            vix = len(data['vertices'])
-            data['colors'].append(self.colors[index])
-            data['texcoords'].append(self.texcoords[index])
-            data['vertices'].append(self.vertices[index])
-            return vix
-
-      self.save_data_init(data)
-      for ent in self.entities:
-         if ent and (len(ent) > 2):
-            dct = data[ENTITY_CONTAINERS[ent[0]]]
-            lst = dct[ent[1]] if ent[1] in dct else []
-            val = tuple([find_vertex(i) for i in ent[2:]]) if (len(ent) > 3) else find_vertex(ent[2])
-            lst.append(val)
-            dct[ent[1]] = lst
-      self.save_data_cleanup(data)
-      return data
+      # Entities with names starting with '!' are not put into the tree, but are kept in a flat array.
+      entities_all  = self.get_complete_entities()
+      entities_tree = [ent for ent in entities_all if not ent[1].startswith('!')]
+      entities_flat = [ent for ent in entities_all if     ent[1].startswith('!')]
+      return self.save_cleanup({
+         'polygons':  create_btree(create_btree_leaves_from_polygons(self.get_complete_polygons(), self.vertices)),
+         'entities':  create_btree(create_btree_leaves_from_entities(entities_tree, self.vertices)),
+         '!entities': self.save_entities(entities_flat),
+         'colors':    self.colors,
+         'texcoords': self.texcoords,
+         'vertices':  self.vertices})
 
    def load_snapshot(self, data):
       self.selected = copy.deepcopy(data['selected'])
@@ -1602,6 +1621,7 @@ class Application:
    def cmd_new(self, *args):
       self.snapshot_history.reset()
       self.reset_variables()
+      self.reset_view()
       self.set_mode(MODE_INSERT)
 
    def cmd_open(self, *args):
@@ -1616,6 +1636,7 @@ class Application:
          raise RecoverableError('Read failure')
       try:
          self.load_model(data)
+         self.reset_view()
       except:
          self.cmd_new()
          raise RecoverableError('Invalid format')
