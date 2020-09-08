@@ -1,30 +1,31 @@
 
 def _get_bbox(vertices):
    left   = min(vertices, key = lambda v: v[0])[0]
-   top    = max(vertices, key = lambda v: v[1])[1]
    right  = max(vertices, key = lambda v: v[0])[0]
    bottom = min(vertices, key = lambda v: v[1])[1]
-   return (left, top, right, bottom)
+   top    = max(vertices, key = lambda v: v[1])[1]
+   return (left, right, bottom, top)
 
 def _get_bbox_union(bboxes):
    left   = min(bboxes, key = lambda b: b[0])[0]
-   top    = max(bboxes, key = lambda b: b[1])[1]
-   right  = max(bboxes, key = lambda b: b[2])[2]
-   bottom = min(bboxes, key = lambda b: b[3])[3]
-   return (left, top, right, bottom)
+   right  = max(bboxes, key = lambda b: b[1])[1]
+   bottom = min(bboxes, key = lambda b: b[2])[2]
+   top    = max(bboxes, key = lambda b: b[3])[3]
+   return (left, right, bottom, top)
 
 def _get_bbox_intersection(bbox1, bbox2):
    left   = max(bbox1[0], bbox2[0])
-   top    = min(bbox1[1], bbox2[1])
-   right  = min(bbox1[2], bbox2[2])
-   bottom = max(bbox1[3], bbox2[3])
-   if (left < right) and (top > bottom):
-      return (left, top, right, bottom)
+   right  = min(bbox1[1], bbox2[1])
+   bottom = max(bbox1[2], bbox2[2])
+   top    = min(bbox1[3], bbox2[3])
+   if (left < right) and (bottom < top):
+      return (left, right, bottom, top)
    else:
       return (0, 0, 0, 0)
 
 def _get_bbox_area(bbox):
-   return ((bbox[2] - bbox[0]) * (bbox[1] - bbox[3]))
+   left, right, bottom, top = bbox
+   return ((right - left) * (top - bottom))
 
 def _determine_division_axis_and_index(leaves_sorted):
    best_area  = None
@@ -66,8 +67,8 @@ def _create_btree_node(leaves_sorted):
       return {
          'bbox': _get_bbox_union([leaf['bbox'] for leaf in leaves]),
          'kind': 'branch',
-         'node1': _create_btree_node(l1),
-         'node2': _create_btree_node(l2)}
+         'sub1': _create_btree_node(l1),
+         'sub2': _create_btree_node(l2)}
    else:
       return leaves[0]
 
@@ -90,8 +91,8 @@ def create_btree_leaves_from_entities(entities, vertices):
 def create_btree(leaves):
    if len(leaves) > 0:
       leaves_sorted = [leaves[:], leaves[:]]
-      for axis in (0, 1):
-         leaves_sorted[axis].sort(key = lambda leaf: (leaf['bbox'][axis] + leaf['bbox'][axis+2]) / 2.0)
+      leaves_sorted[0].sort(key = lambda leaf: (leaf['bbox'][0] + leaf['bbox'][1]) / 2.0) # (left+right)/2
+      leaves_sorted[1].sort(key = lambda leaf: (leaf['bbox'][2] + leaf['bbox'][3]) / 2.0) # (bottom+top)/2
       return _create_btree_node(leaves_sorted)
    else:
       return None
@@ -101,8 +102,8 @@ def get_polygons_from_btree(root):
 
    def traverse_tree(node):
       if node['kind'] == 'branch':
-         traverse_tree(node['node1'])
-         traverse_tree(node['node2'])
+         traverse_tree(node['sub1'])
+         traverse_tree(node['sub2'])
       elif node['kind'] == 'polygon':
          polygons.append(node)
 
@@ -115,8 +116,8 @@ def get_entities_from_btree(root):
 
    def traverse_tree(node):
       if node['kind'] == 'branch':
-         traverse_tree(node['node1'])
-         traverse_tree(node['node2'])
+         traverse_tree(node['sub1'])
+         traverse_tree(node['sub2'])
       elif node['kind'] != 'polygon':
          entities.append(node)
 

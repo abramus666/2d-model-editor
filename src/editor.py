@@ -575,10 +575,10 @@ class Application:
    def reset_view(self):
       if len(self.vertices) > 0:
          left   = min(self.vertices, key = lambda v: v[0])[0]
-         top    = max(self.vertices, key = lambda v: v[1])[1]
          right  = max(self.vertices, key = lambda v: v[0])[0]
          bottom = min(self.vertices, key = lambda v: v[1])[1]
-         self.setup_view((left+right)/2, (top+bottom)/2, right-left, top-bottom)
+         top    = max(self.vertices, key = lambda v: v[1])[1]
+         self.setup_view((left+right)/2, (bottom+top)/2, right-left, top-bottom)
       else:
          self.setup_view(0.0, 0.0, 2.0, 2.0)
 
@@ -1546,9 +1546,9 @@ class Application:
             x1, y1 = self.transform_from_screen_coords(*self.mouse_pos_click)
             x2, y2 = self.transform_from_screen_coords(event.x, event.y)
             left, right = (x1, x2) if (x1 < x2) else (x2, x1)
-            top, bottom = (y1, y2) if (y1 < y2) else (y2, y1)
+            bottom, top = (y1, y2) if (y1 < y2) else (y2, y1)
             for ix, (x, y) in enumerate(self.vertices):
-               if x >= left and x <= right and y >= top and y <= bottom:
+               if x >= left and x <= right and y >= bottom and y <= top:
                   self.new_selected(ix, (KEY_CTRL in self.keys_pressed))
 
    def evt_motion(self, event):
